@@ -236,7 +236,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: "Roboto-Regular",
   },
-  login: {},
   login_text: {
     fontWeight: 400,
     fontSize: 16,
