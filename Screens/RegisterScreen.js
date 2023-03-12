@@ -1,17 +1,22 @@
-// import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
+  Image,
   TouchableOpacity,
   KeyboardAvoidingView,
-  // Keyboard,
-  // Dimensions,
+  Keyboard,
   Platform,
 } from "react-native";
-// import { AppLoading } from "expo";
-// import * as Font from "expo-font";
+import addPhotoIcon from "../assets/images/union.png";
+import deletePhotoIcon from "../assets/images/greyUnion.png";
+import userPhoto from "../assets/images/userPhoto.png";
+
+SplashScreen.preventAutoHideAsync();
 
 const initialState = {
   name: "",
@@ -19,102 +24,121 @@ const initialState = {
   password: "",
 };
 
-// const loadApplication = async () => {
-//   await Font.loadAsync({
-//     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-//   });
-// };
-
 export default function RegistrationScreen() {
-  //   const [isShownKeyboard, setIsShownKeyboard] = useState(false);
-  //   const [state, setState] = useState(initialState);
-  //   const [isReady, setIsReady] = useState(false);
-  //   const [dimensions, setDimensions] = useState(
-  //     (Dimensions.get("window").width = 20 * 2)
-  //   );
+  const [isShownKeyboard, setIsShownKeyboard] = useState(false);
+  const [credentials, setCredentials] = useState(initialState);
+  const [isPhoto, setIsPhoto] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const [fontsLoaded] = useFonts({
+    "Roboto-Regular": require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
+    "Roboto-Bold": require("../assets/fonts/Roboto/Roboto-Bold.ttf"),
+  });
 
-  //   useEffect(() => {
-  //     const onChange = () => {
-  //       const width = Dimensions.get("window").width - 20 * 2;
-  //       console.log("width", width);
-  //       setDimensions(width);
-  //     };
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
-  //     Dimensions.addEventListener("change", onChange);
+  if (!fontsLoaded) {
+    return null;
+  }
 
-  //     return () => {
-  //       Dimensions.removeEventListener("change", onChange);
-  //     };
-  //   }, []);
-
-  //   const keyboardHide = () => {
-  //     setIsShownKeyboard(false);
-  //     Keyboard.dismiss();
-  //     console.log(state);
-  //     setState(initialState);
-  //   };
-
-  //   if (!isReady) {
-  //     return (
-  //       <AppLoading
-  //         startAsync={loadApplication}
-  //         onFinish={() => setIsReady(true)}
-  //         onError={console.warn}
-  //       />
-  //     );
-  //   }
+  const handleRegister = () => {
+    setIsShownKeyboard(false);
+    Keyboard.dismiss();
+    console.log(credentials);
+    setCredentials(initialState);
+  };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
     >
-      <View style={styles.form}>
-        {/* <View style={{...styles.form, marginBottom: isShownKeyboard ? 20 : 10, width: dimensions}}></View> */}
-        <View style={styles.userPhoto}></View>
+      <View
+        style={{ ...styles.form, marginBottom: isShownKeyboard ? 20 : 50 }}
+        onLayout={onLayoutRootView}
+      >
+        <View style={styles.userPhoto}>
+          {isPhoto && (
+            <Image source={userPhoto} />
+          )}
+          {isPhoto ? (
+            <TouchableOpacity
+              style={{ ...styles.addPhotoBtn, borderColor: "#BDBDBD" }}
+              activeOpacity={0.7}
+              onPress={() => setIsPhoto(false)}
+            >
+              <Image source={deletePhotoIcon} style={styles.addPhotoImg} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.addPhotoBtn}
+              activeOpacity={0.7}
+              onPress={() => setIsPhoto(true)}
+            >
+              <Image source={addPhotoIcon} style={styles.addPhotoImg} />
+            </TouchableOpacity>
+          )}
+        </View>
         <Text style={styles.title}>Реєстрація</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={"Ім'я"}
-          placeholderTextColor={"#BDBDBD"}
-          // onFocus={() => setIsShownKeyboard(true)}
-          //   value={state.name}
-          //   onChangeText={(value) =>
-          //     setState((prevState) => ({ ...prevState, name: value }))
-          //   }
-        />
-        <TextInput
-          style={{ ...styles.input, marginTop: 16 }}
-          placeholder={"Адреса електронної пошти"}
-          placeholderTextColor={"#BDBDBD"}
-          //   onFocus={() => setIsShownKeyboard(true)}
-          //   value={state.email}
-          //   onChangeText={(value) =>
-          //     setState((prevState) => ({ ...prevState, email: value }))
-          //   }
-        />
-        <TextInput
-          style={{ ...styles.input, marginTop: 16 }}
-          secureTextEntry={true}
-          placeholder={"Пароль"}
-          placeholderTextColor={"#BDBDBD"}
-          //   onFocus={() => setIsShownKeyboard(true)}
-          //   value={state.password}
-          //   onChangeText={(value) =>
-          //     setState((prevState) => ({ ...prevState, password: value }))
-          //   }
-        />
-        <TouchableOpacity style={styles.show}>
-          <Text style={styles.show_text}>Показати</Text>
-        </TouchableOpacity>
+        <View>
+          <TextInput
+            style={styles.input}
+            placeholder={"Ім'я"}
+            placeholderTextColor={"#BDBDBD"}
+            onFocus={() => setIsShownKeyboard(true)}
+            value={credentials.name}
+            onChangeText={(value) =>
+              setCredentials((prevState) => ({ ...prevState, name: value }))
+            }
+          />
+        </View>
+
+        <View>
+          <TextInput
+            style={{ ...styles.input, marginTop: 16 }}
+            placeholder={"Адреса електронної пошти"}
+            placeholderTextColor={"#BDBDBD"}
+            onFocus={() => setIsShownKeyboard(true)}
+            value={credentials.email}
+            onChangeText={(value) =>
+              setCredentials((prevState) => ({ ...prevState, email: value }))
+            }
+          />
+        </View>
+
+        <View style={{ position: "relative" }}>
+          <TextInput
+            style={{ ...styles.input, marginTop: 16 }}
+            secureTextEntry={true}
+            placeholder={"Пароль"}
+            placeholderTextColor={"#BDBDBD"}
+            onFocus={() => setIsShownKeyboard(true)}
+            value={credentials.password}
+            onChangeText={(value) =>
+              setCredentials((prevState) => ({ ...prevState, password: value }))
+            }
+          />
+          <TouchableOpacity
+            style={styles.show}
+            activeOpacity={0.7}
+            onPressIn={() => setShowPassword(false)}
+            onPressOut={() => setShowPassword(true)}
+          >
+            <Text style={styles.show_text}>Показати</Text>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity
-          style={styles.register}
+          style={styles.register_btn}
           activeOpacity={0.7}
-          //   onPress={keyboardHide}
+          onPress={handleRegister}
         >
           <Text style={styles.register_text}>Зареєструватися</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.login}>
-          <Text style={styles.login_text}>Вже є аккаунт? Увійти</Text>
+          <Text style={styles.login_text}>Вже є акаунт? Увійти</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -122,83 +146,104 @@ export default function RegistrationScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-  },
   form: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    marginHorizontal: 20,
-    // width: 320,
-    padding: 20,
-    // borderWidth: 1,
-    // borderColor: "black",
-    borderRadius: 5,
-    // borderRadius: 50,
+    backgroundColor: "#FFFFFF",
+    borderTopStartRadius: 25,
+    borderTopEndRadius: 25,
+    paddingHorizontal: 15,
+    paddingTop: 70,
+    position: "relative",
   },
   userPhoto: {
-    width: 100,
-    height: 100,
+    position: "absolute",
+    width: 120,
+    height: 120,
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
-    alignSelf: "center",
+    left: "50%",
+    transform: [{ translateY: -130 }, { translateX: -60 }],
+  },
+  addPhotoBtn: {
+    position: "absolute",
+    right: 0,
+    bottom: 14,
+    width: 25,
+    height: 25,
+    transform: [{ translateX: 12.5 }],
+
+    alignItems: "center",
+    justifyContent: "center",
+
+    borderColor: "#FF6C00",
+    borderWidth: 1,
+    borderRadius: "50%",
+  },
+  addPhotoImg: {
+    resizeMode: "cover",
+    width: 15,
+    height: 15,
   },
   title: {
-    fontSize: 30,
-    fontWeight: 500,
     alignSelf: "center",
-    // fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-Bold",
+    color: "#212121",
+    textAlign: "center",
+    fontWeight: 500,
+    fontSize: 30,
+    lineHeight: 35,
+    letterSpacing: "0.01em",
+    marginBottom: 33,
+    marginBottom: 34,
   },
   input: {
-    // width: 250,
-    paddingLeft: 16,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    height: 40,
-    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
     backgroundColor: "#F6F6F6",
-    color: "#212121",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#E8E8E8",
+
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#BDBDBD",
   },
   show: {
-    width: 250,
-    height: 40,
-    backgroundColor: "#F6F6F6",
+    position: "absolute",
+    top: 30,
+    right: 16,
   },
   show_text: {
+    fontWeight: 400,
     fontSize: 16,
+    lineHeight: 19,
+    color: "#1B4371",
   },
-  register: {
-    width: 250,
-    height: 40,
+  register_btn: {
     backgroundColor: "#FF6C00",
-    color: "#fff",
     borderRadius: 100,
-    justifyContent: "center",
+    paddingHorizontal: 93,
+    paddingVertical: 16,
     alignItems: "center",
-
-    // backgroundColor: Platform.OS === 'ios' ? "red" : "blue",
-    //-----------------------------------------------------
-    // ...Platform.select({
-    //   ios: {
-    //     backgroundColor: 'red',
-    //   },
-    //   android: {
-    //     backgroundColor: 'blue',
-    //   }
-    // })
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 16,
   },
   register_text: {
-    color: "#fff",
-  },
-  login: {
     fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
+    fontFamily: "Roboto-Regular",
   },
+  login: {},
   login_text: {
+    fontWeight: 400,
     fontSize: 16,
-    alignSelf: "center",
+    fontFamily: "Roboto-Regular",
+    lineHeight: 19,
+    textAlign: "center",
+    marginBottom: 60,
+    color: "#1B4371",
   },
 });
