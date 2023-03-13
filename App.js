@@ -1,3 +1,4 @@
+<script src="http://localhost:8097"></script>;
 import {
   StyleSheet,
   View,
@@ -9,7 +10,6 @@ import RegistrationScreen from "./Screens/RegisterScreen";
 import LoginScreen from "./Screens/LoginScreen";
 
 export default function App() {
-
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -17,8 +17,8 @@ export default function App() {
           style={styles.image}
           source={require("./assets/images/bg_photo.jpg")}
         >
-          {/* <RegistrationScreen /> */}
-          <LoginScreen />
+          <RegistrationScreen />
+          {/* <LoginScreen /> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
