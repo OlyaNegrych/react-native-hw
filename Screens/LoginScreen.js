@@ -86,7 +86,7 @@ export default function LoginScreen({ navigation }) {
               <View style={{ position: "relative" }}>
                 <TextInput
                   style={{ ...styles.input, marginTop: 16 }}
-                  secureTextEntry={true}
+                  secureTextEntry={showPassword}
                   placeholder={"Пароль"}
                   placeholderTextColor={"#BDBDBD"}
                   onFocus={() => setIsShownKeyboard(true)}
