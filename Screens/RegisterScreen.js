@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: "0.01em",
-    marginBottom: 33,
     marginBottom: 34,
   },
   input: {

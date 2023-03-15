@@ -150,35 +150,6 @@ const styles = StyleSheet.create({
     paddingTop: 70,
     position: "relative",
   },
-  userPhoto: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
-    left: "50%",
-    transform: [{ translateY: -130 }, { translateX: -60 }],
-  },
-  addPhotoBtn: {
-    position: "absolute",
-    right: 0,
-    bottom: 14,
-    width: 25,
-    height: 25,
-    transform: [{ translateX: 12.5 }],
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderColor: "#FF6C00",
-    borderWidth: 1,
-    borderRadius: "50%",
-  },
-  addPhotoImg: {
-    resizeMode: "cover",
-    width: 15,
-    height: 15,
-  },
   title: {
     alignSelf: "center",
     fontFamily: "Roboto-Bold",
